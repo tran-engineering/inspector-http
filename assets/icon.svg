@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="128" cy="128" r="120" fill="#2196F3"/>
+
+  <!-- Server icon -->
+  <g transform="translate(128, 128)">
+    <!-- Top server box -->
+    <rect x="-60" y="-70" width="120" height="40" rx="4" fill="#FFFFFF" opacity="0.95"/>
+    <circle cx="-40" cy="-50" r="4" fill="#4CAF50"/>
+    <circle cx="-25" cy="-50" r="4" fill="#FFC107"/>
+    <line x1="-10" y1="-55" x2="40" y2="-55" stroke="#90CAF9" stroke-width="3" stroke-linecap="round"/>
+    <line x1="-10" y1="-45" x2="30" y2="-45" stroke="#90CAF9" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Middle server box -->
+    <rect x="-60" y="-20" width="120" height="40" rx="4" fill="#FFFFFF" opacity="0.95"/>
+    <circle cx="-40" cy="0" r="4" fill="#4CAF50"/>
+    <circle cx="-25" cy="0" r="4" fill="#FFC107"/>
+    <line x1="-10" y1="-5" x2="40" y2="-5" stroke="#90CAF9" stroke-width="3" stroke-linecap="round"/>
+    <line x1="-10" y1="5" x2="30" y2="5" stroke="#90CAF9" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Bottom server box -->
+    <rect x="-60" y="30" width="120" height="40" rx="4" fill="#FFFFFF" opacity="0.95"/>
+    <circle cx="-40" cy="50" r="4" fill="#4CAF50"/>
+    <circle cx="-25" cy="50" r="4" fill="#FFC107"/>
+    <line x1="-10" y1="45" x2="40" y2="45" stroke="#90CAF9" stroke-width="3" stroke-linecap="round"/>
+    <line x1="-10" y1="55" x2="30" y2="55" stroke="#90CAF9" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- HTTP badge -->
+  <g transform="translate(128, 200)">
+    <rect x="-30" y="-12" width="60" height="24" rx="12" fill="#FF5722"/>
+    <text x="0" y="4" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">HTTP</text>
+  </g>
+</svg>

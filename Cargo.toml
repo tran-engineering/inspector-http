@@ -1,0 +1,24 @@
+[package]
+name = "inspector-http"
+version = "0.1.0"
+edition = "2024"
+authors = ["Your Name <your.email@example.com>"]
+description = "A desktop HTTP server with a GUI for monitoring and inspecting incoming requests"
+readme = "README.md"
+repository = "https://github.com/tran-engineering/inspector-http"
+license = "MIT OR Apache-2.0"
+keywords = ["http", "server", "inspector", "monitoring", "development"]
+categories = ["development-tools", "network-programming", "gui"]
+
+[dependencies]
+eframe = "0.33"
+tokio = { version = "1", features = ["full"] }
+hyper = { version = "1", features = ["full"] }
+hyper-util = { version = "0.1", features = ["full"] }
+http-body-util = "0.1"
+chrono = "0.4"
+urlencoding = "2.1"
+rfd = "0.15"
+serde_json = "1.0"
+egui_json_tree = "0.14"
+image = { version = "0.25", default-features = false, features = ["png"] }

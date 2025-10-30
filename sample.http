@@ -1,0 +1,213 @@
+# Inspector HTTP - Sample Requests
+# You can use this file with REST clients like:
+# - VS Code REST Client extension
+# - IntelliJ HTTP Client
+# - Or run with curl commands
+
+### Simple GET request
+GET http://localhost:8080/
+
+###
+
+### GET with path
+GET http://localhost:8080/api/users
+
+###
+
+### GET with query parameters
+GET http://localhost:8080/api/users?page=1&limit=10&sort=name
+
+###
+
+### GET with headers
+GET http://localhost:8080/api/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+Accept: application/json
+User-Agent: InspectorHTTP/1.0
+
+###
+
+### POST with JSON body
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "age": 30,
+  "role": "developer"
+}
+
+###
+
+### POST with form data
+POST http://localhost:8080/login
+Content-Type: application/x-www-form-urlencoded
+
+username=admin&password=secret123
+
+###
+
+### POST with nested JSON
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "orderId": "ORD-12345",
+  "customer": {
+    "id": 42,
+    "name": "Jane Smith",
+    "email": "jane@example.com"
+  },
+  "items": [
+    {
+      "productId": "PROD-001",
+      "name": "Laptop",
+      "quantity": 1,
+      "price": 1299.99
+    },
+    {
+      "productId": "PROD-002",
+      "name": "Mouse",
+      "quantity": 2,
+      "price": 29.99
+    }
+  ],
+  "totalAmount": 1359.97,
+  "status": "pending"
+}
+
+###
+
+### PUT request to update resource
+PUT http://localhost:8080/api/users/123
+Content-Type: application/json
+Authorization: Bearer token123
+
+{
+  "name": "John Doe Updated",
+  "email": "john.updated@example.com",
+  "age": 31
+}
+
+###
+
+### PUT with plain text body
+PUT http://localhost:8080/api/notes/456
+Content-Type: text/plain
+
+This is a plain text note that will be updated.
+It can span multiple lines.
+
+###
+
+### PATCH request for partial update
+PATCH http://localhost:8080/api/users/123
+Content-Type: application/json
+
+{
+  "email": "newemail@example.com"
+}
+
+###
+
+### DELETE request
+DELETE http://localhost:8080/api/users/123
+
+###
+
+### DELETE with headers
+DELETE http://localhost:8080/api/posts/456
+Authorization: Bearer token123
+X-Confirm-Delete: true
+
+###
+
+### HEAD request (get headers only)
+HEAD http://localhost:8080/api/users
+
+###
+
+### OPTIONS request (for CORS preflight)
+OPTIONS http://localhost:8080/api/users
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: Content-Type
+Origin: http://example.com
+
+###
+
+### POST with multiline string body
+POST http://localhost:8080/api/messages
+Content-Type: text/plain
+
+Hello from Inspector HTTP!
+
+This is a multiline message.
+Line 1
+Line 2
+Line 3
+
+Best regards,
+The Testing Team
+
+###
+
+### POST with XML body
+POST http://localhost:8080/api/data
+Content-Type: application/xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<user>
+  <id>123</id>
+  <name>John Doe</name>
+  <email>john@example.com</email>
+  <preferences>
+    <theme>dark</theme>
+    <notifications>true</notifications>
+  </preferences>
+</user>
+
+###
+
+### POST with large JSON array
+POST http://localhost:8080/api/bulk-create
+Content-Type: application/json
+
+{
+  "users": [
+    {"id": 1, "name": "Alice", "email": "alice@example.com"},
+    {"id": 2, "name": "Bob", "email": "bob@example.com"},
+    {"id": 3, "name": "Charlie", "email": "charlie@example.com"},
+    {"id": 4, "name": "Diana", "email": "diana@example.com"},
+    {"id": 5, "name": "Eve", "email": "eve@example.com"}
+  ]
+}
+
+###
+
+### GET with custom headers
+GET http://localhost:8080/api/data
+X-Request-ID: req-abc-123
+X-Custom-Header: custom-value
+Accept-Language: en-US,en;q=0.9
+Cache-Control: no-cache
+
+###
+
+### POST with empty body
+POST http://localhost:8080/api/trigger
+
+###
+
+### PUT with JSON containing special characters
+PUT http://localhost:8080/api/config
+Content-Type: application/json
+
+{
+  "path": "/usr/local/bin",
+  "regex": "^[a-zA-Z0-9_-]+$",
+  "message": "Quote: \"Hello World!\" & special chars: <>&",
+  "unicode": "Hello 世界 🌍"
+}
+
+###
