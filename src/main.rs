@@ -1,5 +1,6 @@
 mod request_detail;
 mod request_overview;
+mod response_config;
 
 use chrono::Local;
 use eframe::egui;
@@ -36,6 +37,14 @@ struct HttpServerApp {
     last_working_port: Arc<Mutex<u16>>,
     error_message: Option<String>,
     error_timestamp: Option<Instant>,
+    response_config: Arc<Mutex<response_config::ResponseConfig>>,
+    active_tab: AppTab,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum AppTab {
+    RequestDetails,
+    ResponseConfig,
 }
 
 impl HttpServerApp {
@@ -55,6 +64,8 @@ impl HttpServerApp {
             last_working_port,
             error_message: None,
             error_timestamp: None,
+            response_config: Arc::new(Mutex::new(response_config::ResponseConfig::default())),
+            active_tab: AppTab::RequestDetails,
         }
     }
 }
@@ -170,11 +181,35 @@ impl eframe::App for HttpServerApp {
                 );
             });
 
-        // Right panel - Detailed request view
+        // Right panel - Tabbed view (Request Details / Response Config)
         egui::CentralPanel::default().show(ctx, |ui| {
-            let requests = self.requests.lock().unwrap();
-            let selected_request = self.selected_request.and_then(|idx| requests.get(idx));
-            request_detail::render_request_detail(ui, selected_request);
+            // Tab bar
+            ui.horizontal(|ui| {
+                ui.selectable_value(
+                    &mut self.active_tab,
+                    AppTab::RequestDetails,
+                    "📥 Request Details",
+                );
+                ui.selectable_value(
+                    &mut self.active_tab,
+                    AppTab::ResponseConfig,
+                    "📤 Response Config",
+                );
+            });
+            ui.separator();
+
+            // Tab content
+            match self.active_tab {
+                AppTab::RequestDetails => {
+                    let requests = self.requests.lock().unwrap();
+                    let selected_request = self.selected_request.and_then(|idx| requests.get(idx));
+                    request_detail::render_request_detail(ui, selected_request);
+                }
+                AppTab::ResponseConfig => {
+                    let mut config = self.response_config.lock().unwrap();
+                    response_config::render_response_config(ui, &mut config);
+                }
+            }
         });
     }
 }
@@ -183,6 +218,7 @@ async fn handle_request(
     req: Request<Incoming>,
     remote_addr: String,
     requests: Arc<Mutex<Vec<HttpRequest>>>,
+    response_config: Arc<Mutex<response_config::ResponseConfig>>,
 ) -> Result<Response<Full<Bytes>>, hyper::Error> {
     let timestamp = Local::now().format("%Y-%m-%d %H:%M:%S%.3f").to_string();
     let method = req.method().to_string();
@@ -247,7 +283,23 @@ async fn handle_request(
 
     requests.lock().unwrap().push(http_req);
 
-    Ok(Response::new(Full::new(Bytes::from("OK\n"))))
+    // Build response using configured status code and body
+    let config = response_config.lock().unwrap();
+    let response_body = config.response_body.clone();
+    let status_code = config.status_code;
+    drop(config); // Release lock early
+
+    // Build the response - this shouldn't fail with valid status codes
+    let response = Response::builder()
+        .status(status_code)
+        .body(Full::new(Bytes::from(response_body)))
+        .unwrap_or_else(|e| {
+            eprintln!("Error building response: {}", e);
+            // Fallback to a simple 200 OK response
+            Response::new(Full::new(Bytes::from("OK\n")))
+        });
+
+    Ok(response)
 }
 
 fn find_available_port(start_port: u16) -> u16 {
@@ -280,6 +332,7 @@ fn main() {
         Arc::clone(&last_working_port),
     );
     let requests = Arc::clone(&app.requests);
+    let response_config = Arc::clone(&app.response_config);
     let initial_port = app.port;
 
     // Spawn server thread that can restart on port changes
@@ -291,6 +344,7 @@ fn main() {
 
         loop {
             let requests_clone = Arc::clone(&requests);
+            let response_config_clone = Arc::clone(&response_config);
             let status_clone = Arc::clone(&server_status);
             let port_rx_clone2 = Arc::clone(&port_rx_clone);
             let last_working_clone2 = Arc::clone(&last_working_clone);
@@ -303,6 +357,7 @@ fn main() {
                 match run_server_cancellable(
                     current_port,
                     requests_clone,
+                    response_config_clone,
                     port_rx_clone2,
                     status_clone,
                     last_working_clone2,
@@ -356,6 +411,7 @@ fn main() {
 async fn run_server_cancellable(
     port: u16,
     requests: Arc<Mutex<Vec<HttpRequest>>>,
+    response_config: Arc<Mutex<response_config::ResponseConfig>>,
     port_rx: Arc<Mutex<Receiver<u16>>>,
     _server_status: Arc<Mutex<String>>,
     last_working_port: Arc<Mutex<u16>>,
@@ -387,11 +443,17 @@ async fn run_server_cancellable(
             Ok(Ok((stream, remote_addr))) => {
                 let io = TokioIo::new(stream);
                 let requests = Arc::clone(&requests);
+                let response_config = Arc::clone(&response_config);
                 let remote_addr_str = remote_addr.to_string();
 
                 tokio::task::spawn(async move {
                     let service = service_fn(move |req| {
-                        handle_request(req, remote_addr_str.clone(), Arc::clone(&requests))
+                        handle_request(
+                            req,
+                            remote_addr_str.clone(),
+                            Arc::clone(&requests),
+                            Arc::clone(&response_config),
+                        )
                     });
 
                     if let Err(err) = http1::Builder::new().serve_connection(io, service).await {
