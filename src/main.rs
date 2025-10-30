@@ -146,7 +146,7 @@ impl eframe::App for HttpServerApp {
                 // Show error message if present, otherwise show server status
                 if let Some(ref error_msg) = self.error_message {
                     ui.label(
-                        egui::RichText::new("●")
+                        egui::RichText::new("🔌")
                             .color(egui::Color32::RED)
                             .size(16.0),
                     );
@@ -161,7 +161,7 @@ impl eframe::App for HttpServerApp {
                         egui::Color32::YELLOW
                     };
 
-                    ui.label(egui::RichText::new("●").color(status_color).size(16.0));
+                    ui.label(egui::RichText::new("🔌").color(status_color).size(16.0));
                     ui.label(egui::RichText::new(&*status).color(status_color));
                 }
             });
@@ -174,11 +174,19 @@ impl eframe::App for HttpServerApp {
             .resizable(true)
             .show(ctx, |ui| {
                 let requests = self.requests.lock().unwrap();
-                request_overview::render_request_overview(
+                let clear_requests = request_overview::render_request_overview(
                     ui,
                     &requests,
                     &mut self.selected_request,
+                    self.port,
                 );
+
+                // Handle clear requests action
+                if clear_requests {
+                    drop(requests); // Release the lock before clearing
+                    self.requests.lock().unwrap().clear();
+                    self.selected_request = None;
+                }
             });
 
         // Right panel - Tabbed view (Request Details / Response Config)

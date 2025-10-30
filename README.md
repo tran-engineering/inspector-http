@@ -1,12 +1,16 @@
 # Inspector HTTP
 
-A desktop HTTP server with a GUI for monitoring and inspecting incoming requests. Perfect for development, testing webhooks, and debugging HTTP clients.
+![Logo](./assets/icon.svg)
 
-![Inspector HTTP Icon](assets/icon-256.png)
+A desktop HTTP server with a GUI for monitoring and inspecting incoming requests. Perfect for development, testing webhooks, and debugging HTTP clients.
 
 ## Features
 
-- **HTTP Server**: Responds with 200 OK to all incoming requests
+- **HTTP Server**: Configurable HTTP server with customizable responses
+- **Response Configuration**: Customize HTTP status codes (200, 404, 500, etc.) and response bodies
+  - Quick-select buttons for common status codes
+  - Response body templates (JSON, HTML, plain text)
+  - Real-time response customization without server restart
 - **Real-time Monitoring**: View all incoming HTTP requests in a clean GUI
 - **Request Details**: Inspect method, path, query parameters, headers, and body
 - **JSON Visualization**: Interactive JSON tree view for JSON request bodies
@@ -15,6 +19,7 @@ A desktop HTTP server with a GUI for monitoring and inspecting incoming requests
 - **Runtime Port Configuration**: Change the listening port without restarting
 - **Auto Port Detection**: Automatically finds the first available port starting from 8080
 - **Error Recovery**: Automatic rollback to last working port on binding errors
+- **Tabbed Interface**: Switch between request details and response configuration
 
 ## Installation
 
@@ -48,9 +53,20 @@ The application will:
 ### GUI Features
 
 - **Left Panel**: Overview list of all captured requests
-- **Right Panel**: Detailed view of the selected request
+- **Right Panel**: Tabbed interface with two views:
+  - **Request Details Tab**: Detailed view of the selected request with JSON tree visualization
+  - **Response Config Tab**: Configure HTTP status codes and response bodies
 - **Top Panel**: Port configuration (can be changed at runtime)
 - **Bottom Status Bar**: Current server status and temporary error messages
+
+### Response Configuration
+
+The Response Config tab allows you to customize how the server responds to incoming requests:
+
+- **Status Codes**: Set any HTTP status code (100-599) with quick-select buttons for common codes
+- **Response Body**: Customize the response body with a multiline editor
+- **Templates**: Quick templates for common response types (JSON success/error, HTML, plain text)
+- **Real-time Updates**: Changes take effect immediately for new requests
 
 ### Testing
 
