@@ -1,0 +1,13 @@
+sign-commit = false
+sign-tag = false
+push = true
+publish = true
+tag = false
+allow-branch = ["main"]
+consolidate-commits = true
+generate-release-notes = true
+release = true
+
+# Automatically create a GitHub Release with changelog notes
+[github]
+release = true

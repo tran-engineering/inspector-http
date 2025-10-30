@@ -64,11 +64,9 @@ impl eframe::App for HttpServerApp {
         ctx.request_repaint();
 
         // Check if error message should be cleared (after 5 seconds)
-        if let Some(timestamp) = self.error_timestamp {
-            if timestamp.elapsed() > Duration::from_secs(5) {
+        if let Some(timestamp) = self.error_timestamp && timestamp.elapsed() > Duration::from_secs(5) {
                 self.error_message = None;
                 self.error_timestamp = None;
-            }
         }
 
         // Check if server is in error state and reset port input to last working port
