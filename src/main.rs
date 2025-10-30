@@ -343,6 +343,7 @@ fn main() {
 
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
+            .with_app_id("InspectorHTTP")
             .with_inner_size([800.0, 600.0])
             .with_title("Inspector HTTP")
             .with_icon(icon),

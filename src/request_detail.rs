@@ -7,7 +7,7 @@ pub fn render_request_detail(ui: &mut egui::Ui, request: Option<&HttpRequest>) {
         ui.heading("Request Details");
         ui.separator();
 
-        egui::ScrollArea::vertical().show(ui, |ui| {
+        egui::ScrollArea::both().show(ui, |ui| {
             // Timestamp
             ui.horizontal(|ui| {
                 ui.label(egui::RichText::new("Timestamp:").strong());
@@ -172,13 +172,9 @@ fn render_body(ui: &mut egui::Ui, body: &str, body_size: usize, headers: &[(Stri
                                 ui.add_space(5.0);
                             }
 
-                            egui::ScrollArea::vertical()
-                                .max_height(400.0)
-                                .show(ui, |ui| {
-                                    JsonTree::new("json-body-tree", &json_value)
-                                        .default_expand(default_expand)
-                                        .show(ui);
-                                });
+                            JsonTree::new("json-body-tree", &json_value)
+                                .default_expand(default_expand)
+                                .show(ui);
                         });
                     return;
                 }
