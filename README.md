@@ -4,6 +4,9 @@
 
 A desktop HTTP server with a GUI for monitoring and inspecting incoming requests. Perfect for development, testing webhooks, and debugging HTTP clients.
 
+
+![Screenshot](./screenshot.png)
+
 ## Features
 
 - **HTTP Server**: Configurable HTTP server with customizable responses
